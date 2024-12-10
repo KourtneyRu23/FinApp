@@ -459,11 +459,11 @@ server <- function(input, output, session) {
                      
                      fluidRow(
                        column(4, 
-                              div(class = "tax-input-label", "Gross Income (VND)"),
+                              div(class = "tax-input-label", "Gross Income (MVND)"),
                               numericInput("gross_income", NULL, value = 0, min = 0)
                        ),
                        column(4, 
-                              div(class = "tax-input-label", "Other Income (Optional, VND)"),
+                              div(class = "tax-input-label", "Other Income (Optional, MVND)"),
                               numericInput("other_income", NULL, value = 0, min = 0)
                        )
                      ),
@@ -473,7 +473,7 @@ server <- function(input, output, session) {
                               numericInput("dependents", NULL, value = 0, min = 0, step = 1)
                        ),
                        column(4, 
-                              div(class = "tax-input-label", "Deductions (Optional, VND)"),
+                              div(class = "tax-input-label", "Deductions (Optional, MVND)"),
                               numericInput("deductions", NULL, value = 0, min = 0)
                        )
                      ),
@@ -561,28 +561,28 @@ server <- function(input, output, session) {
                      
                      fluidRow(
                        column(4, 
-                              div(class = "emergency-input-label", "Housing (Rent or Mortgage Payment)"),
-                              numericInput("housing", NULL, value = 4000000, min = 0)
+                              div(class = "emergency-input-label", "Housing (Rent or Mortgage Payment) MVND"),
+                              numericInput("housing", NULL, value = 4, min = 0)
                        ),
                        column(4, 
-                              div(class = "emergency-input-label", "Utility (Gas, Electricity, Water, etc)"),
-                              numericInput("utility", NULL, value = 1000000, min = 0)
+                              div(class = "emergency-input-label", "Utility (Gas, Electricity, Water, etc) MVND"),
+                              numericInput("utility", NULL, value = 1, min = 0)
                        )
                      ),
                      fluidRow(
                        column(4, 
-                              div(class = "emergency-input-label", "Groceries Expense"),
-                              numericInput("groceries", NULL, value = 3000000, min = 0, step = 1)
+                              div(class = "emergency-input-label", "Groceries Expense (MVND)" ),
+                              numericInput("groceries", NULL, value = 3, min = 0, step = 1)
                        ),
                        column(4, 
-                              div(class = "emergency-input-label", "Health Expense"),
-                              numericInput("health", NULL, value = 500000, min = 0)
+                              div(class = "emergency-input-label", "Health Expense (MVND)"),
+                              numericInput("health", NULL, value = 0.5, min = 0)
                        )
                      ),
                      fluidRow(
                        column(4, 
-                              div(class = "emergency-input-label", "Other Expenses"),
-                              numericInput("others", NULL, value = 500000, min = 0)
+                              div(class = "emergency-input-label", "Other Expenses (MVND)"),
+                              numericInput("others", NULL, value = 0.5, min = 0)
                        )
                      ),
                      actionButton("calculate_emergency", "Calculate Emergency Fund", class = "emergency-calculate-btn"),
@@ -651,12 +651,12 @@ server <- function(input, output, session) {
                      
                      fluidRow(
                        column(4, 
-                              div(class = "savings-input-label", "Monthly Deposit (VND)"),
-                              numericInput("deposit", NULL, value = 1000000, min = 0)
+                              div(class = "savings-input-label", "Monthly Deposit (MVND)"),
+                              numericInput("deposit", NULL, value = 10, min = 0)
                        ),
                        column(4, 
-                              div(class = "savings-input-label", "Desired Savings Goal (VND)"),
-                              numericInput("goal", NULL, value = 50000000, min = 0)
+                              div(class = "savings-input-label", "Desired Savings Goal (MVND)"),
+                              numericInput("goal", NULL, value = 500, min = 0)
                        )
                      ),
                      fluidRow(
@@ -665,7 +665,7 @@ server <- function(input, output, session) {
                               numericInput("growth_rate", NULL, value = 7, min = 0, step = 0.1)
                        ),
                        column(4, 
-                              div(class = "savings-input-label", "Initial Savings (Optional, VND)"),
+                              div(class = "savings-input-label", "Initial Savings (Optional, MVND)"),
                               numericInput("initial_savings", NULL, value = 0, min = 0)
                        )
                      ),
@@ -687,11 +687,11 @@ server <- function(input, output, session) {
         h2("Mortgage Calculator", class = "mortgage-title"),
         fluidRow(
           column(4, 
-                 div(class = "mortgage-input-label", "Net Income (VND)"),
+                 div(class = "mortgage-input-label", "Net Income (MVND)"),
                  numericInput("net_income", NULL, value = 0, min = 0)
           ),
           column(4, 
-                 div(class = "mortgage-input-label", "Loan Amount (VND)"),
+                 div(class = "mortgage-input-label", "Loan Amount (MVND)"),
                  numericInput("loan_amount", NULL, value = 0, min = 0)
           )
         ),
@@ -975,10 +975,10 @@ server <- function(input, output, session) {
         !is.na(input$medical_insurance),
         !is.na(input$unemployed_insurance))
     
-    gross_income <- ifelse(is.na(input$gross_income), 0, input$gross_income)
-    other_income <- ifelse(is.na(input$other_income), 0, input$other_income)
+    gross_income <- ifelse(is.na(input$gross_income), 0, input$gross_income*1000000)
+    other_income <- ifelse(is.na(input$other_income), 0, input$other_income*1000000)
     dependents <- ifelse(is.na(input$dependents), 0, input$dependents)
-    deductions <- ifelse(is.na(input$deductions), 0, input$deductions)
+    deductions <- ifelse(is.na(input$deductions), 0, input$deductions*1000000)
     social_insurance <- ifelse(input$social_insurance == "Yes", 0.08 * gross_income, 0)
     medical_insurance <- ifelse(input$medical_insurance == "Yes", 0.015 * gross_income, 0)
     unemployed_insurance <- ifelse(input$unemployed_insurance == "Yes", 0.01 * gross_income, 0)
@@ -1027,7 +1027,7 @@ server <- function(input, output, session) {
   
   # Emergency Fund Logic
   observeEvent(input$calculate_emergency, {
-    monthly_expense <- sum(input$housing, input$utility, input$groceries, input$health, input$others)
+    monthly_expense <- sum(input$housing*1000000, input$utility*1000000, input$groceries*1000000, input$health*1000000, input$others*1000000)
     emergency_fund <- monthly_expense * 3
     output$emergency_monthly <- renderUI({
       HTML(paste(
@@ -1057,15 +1057,22 @@ server <- function(input, output, session) {
   
   # Savings Goal Logic
   observeEvent(input$calculate_savings, {
-    deposit <- input$deposit
-    goal <- input$goal
+    deposit <- input$deposit*1000000
+    goal <- input$goal*1000000
     growth_rate <- input$growth_rate / 100
     initial_savings <- input$initial_savings
     
     r <- growth_rate / 12
-    n_months <- ifelse(initial_savings >= goal, 0, ceiling(12 * log(1 + (goal - initial_savings) * r / deposit) / log(1 + r)))
     
-    output$savings_time <- renderText(paste("Time Required to Reach Goal: ", n_months, " months"))
+    if (initial_savings >= goal) {
+      n_months <- 0
+    } else if (initial_savings == 0) {
+      n_months <- ceiling((log(r*(goal/(deposit*(1+r))) + 1))/ (12*log(1 + r)))
+    } else {
+      n_months <- ceiling(log((goal+deposit)/(initial_savings + deposit*((1+r)/r)))/(12*log(1+r)))
+    }
+    
+    output$savings_time <- renderText(paste("Time Required to Reach Goal: ", n_months*12, " months"))
   })
   
   # Mortgage Calculation Logic
