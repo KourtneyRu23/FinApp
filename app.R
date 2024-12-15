@@ -1107,10 +1107,10 @@ server <- function(input, output, session) {
     threshold <- net_income * 0.28
     
     output$monthly_payment <- renderText({
-      paste("Monthly Payment: ", format(round(monthly_payment, 2), big.mark = ","), "VND")
+      paste("Monthly Payment: ", format(round(monthly_payment, 2), big.mark = ","), "MVND")
     })
     output$early_repayment_fee <- renderText({
-      paste("Early Repayment Fee: ", format(round(early_repayment_fee, 2), big.mark = ","), "VND")
+      paste("Early Repayment Fee: ", format(round(early_repayment_fee, 2), big.mark = ","), "MVND")
     })
     
     if (monthly_payment > threshold) {
